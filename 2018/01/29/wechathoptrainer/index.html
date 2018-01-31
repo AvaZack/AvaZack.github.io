@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+
+
+  <meta name="keywords" content="More than techs." />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="先贴代码：https://github.com/AvaZack/wechathoptrainer简述一下思路： 获取设备截图 用opencv（以下简称cv）找到小人的位置 找到目标点的位置位置修正 计算修正后的距离 下发长按事件  ##想法比较直观，下面就对每一步的实现做一下简述。 步骤1：获取设备截图方法1：命令行android自带截图命令行工具screencap，在版本低于19(4.4)的手机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wechathoptrainer">
+<meta property="og:url" content="https://avazack.github.io/2018/01/29/wechathoptrainer/index.html">
+<meta property="og:site_name" content="Zack&#39;s Blog">
+<meta property="og:description" content="先贴代码：https://github.com/AvaZack/wechathoptrainer简述一下思路： 获取设备截图 用opencv（以下简称cv）找到小人的位置 找到目标点的位置位置修正 计算修正后的距离 下发长按事件  ##想法比较直观，下面就对每一步的实现做一下简述。 步骤1：获取设备截图方法1：命令行android自带截图命令行工具screencap，在版本低于19(4.4)的手机">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-01-31T12:01:02.404Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="wechathoptrainer">
+<meta name="twitter:description" content="先贴代码：https://github.com/AvaZack/wechathoptrainer简述一下思路： 获取设备截图 用opencv（以下简称cv）找到小人的位置 找到目标点的位置位置修正 计算修正后的距离 下发长按事件  ##想法比较直观，下面就对每一步的实现做一下简述。 步骤1：获取设备截图方法1：命令行android自带截图命令行工具screencap，在版本低于19(4.4)的手机">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"always","offset":5,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://avazack.github.io/2018/01/29/wechathoptrainer/"/>
+
+
+
+
+
+  <title>wechathoptrainer | Zack's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zack's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://avazack.github.io/2018/01/29/wechathoptrainer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zack M">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zack's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">wechathoptrainer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-29T16:27:35+08:00">
+                2018-01-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="先贴代码：https-github-com-AvaZack-wechathoptrainer"><a href="#先贴代码：https-github-com-AvaZack-wechathoptrainer" class="headerlink" title="先贴代码：https://github.com/AvaZack/wechathoptrainer"></a>先贴代码：<a href="https://github.com/AvaZack/wechathoptrainer" target="_blank" rel="noopener">https://github.com/AvaZack/wechathoptrainer</a></h2><h2 id="简述一下思路："><a href="#简述一下思路：" class="headerlink" title="简述一下思路："></a>简述一下思路：</h2><ol>
+<li>获取设备截图</li>
+<li>用opencv（以下简称cv）找到小人的位置</li>
+<li>找到目标点的位置<br>位置修正</li>
+<li>计算修正后的距离</li>
+<li>下发长按事件</li>
+</ol>
+<p>##想法比较直观，下面就对每一步的实现做一下简述。</p>
+<h4 id="步骤1：获取设备截图"><a href="#步骤1：获取设备截图" class="headerlink" title="步骤1：获取设备截图"></a>步骤1：获取设备截图</h4><h6 id="方法1：命令行"><a href="#方法1：命令行" class="headerlink" title="方法1：命令行"></a>方法1：命令行</h6><p>android自带截图命令行工具screencap，<br>在版本低于19(4.4)的手机上，可以直接试用Rumtime.exec(new String[]{“screencap -p &gt; “ + filePath});<br>而在21(5.0)以上的版本，需要加上两个参数，写法如下Runtime.exec(new String[]{“sh”,”-c”,”screencap -p &gt; “ + filePath});<br>这样就可以将图片以png格式存储在指定路径，这个方法的好处是不用root，不用申请READ_FRAMEBUFFER权限。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public static void screenshotAndSave() &#123;</span><br><span class="line">    Log.d(TAG, &quot;screenshotAndSave&quot;);</span><br><span class="line"></span><br><span class="line">    try &#123;</span><br><span class="line">        Process p = Config.RunAsRoot(new String[]&#123;&quot;screencap -p &gt; &quot; + Config.PATH_SCREEN_SHOT_PNG&#125;);</span><br><span class="line">        p.waitFor();</span><br><span class="line">        File scrnFile = new File(Config.PATH_SCREEN_SHOT_PNG);</span><br><span class="line">        Log.d(TAG, &quot;screenshot size=&quot; + (scrnFile.exists() ? scrnFile.length() : 0));</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h6 id="方法二：java实现"><a href="#方法二：java实现" class="headerlink" title="方法二：java实现"></a>方法二：java实现</h6><p>通过sdk自带的接口，也就是平时大家用power键+volume down键截屏的接口。<br>在17版本以上，使用SurfaceControl类的静态方法screenshot(int width, int height);<br>此函数会返回一个bitmap对象，后续可以自己决定存储路径。<br>此函数的两个参数可以通过Display类的getRealMetrics方法获取，示例如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">// We need to orient the screenshot correctly (and the Surface api seems to take screenshots</span><br><span class="line">// only in the natural orientation of the device :!)</span><br><span class="line">//</span><br><span class="line">mDisplay.getRealMetrics(mDisplayMetrics);</span><br><span class="line">float[] dims = &#123;mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels&#125;;</span><br><span class="line">float degrees = getDegreesForRotation(mDisplay.getRotation());</span><br><span class="line">boolean requiresRotation = (degrees &gt; 0);</span><br><span class="line">if (requiresRotation) &#123;</span><br><span class="line">    // Get the dimensions of the device in its native orientation</span><br><span class="line">    mDisplayMatrix.reset();</span><br><span class="line">    mDisplayMatrix.preRotate(-degrees);</span><br><span class="line">    mDisplayMatrix.mapPoints(dims);</span><br><span class="line">    dims[0] = Math.abs(dims[0]);</span><br><span class="line">    dims[1] = Math.abs(dims[1]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Take the screenshot</span><br><span class="line">synchronized (sLock) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        String surfaceClassName;</span><br><span class="line">        if (Build.VERSION.SDK_INT &lt;= 17) &#123;</span><br><span class="line">            surfaceClassName = &quot;android.view.Surface&quot;;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            surfaceClassName = &quot;android.view.SurfaceControl&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        Log.d(TAG, &quot;ClassName= &quot; + surfaceClassName);</span><br><span class="line">        Class&lt;?&gt; surfaceControlClass = Class.forName(surfaceClassName);</span><br><span class="line">        Method screenshotMethod = surfaceControlClass.getMethod(&quot;screenshot&quot;, int.class, int.class);</span><br><span class="line">        mScreenBitmap = (Bitmap) screenshotMethod.invoke(null, (int) dims[0], (int) dims[1]);</span><br><span class="line"></span><br><span class="line">    &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; catch (NoSuchMethodException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; catch (IllegalAccessException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; catch (InvocationTargetException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="步骤2：用cv找到小人位置"><a href="#步骤2：用cv找到小人位置" class="headerlink" title="步骤2：用cv找到小人位置"></a>步骤2：用cv找到小人位置</h4><p>小人对于整个游戏画面是一块特殊的图像，所以可以使用cv的模板匹配功能来实现。首先我们截取小人的图像，作为模板图像以资源文件形式放进项目里。<br>cv的模板匹配会匹配源图像中与模板图像匹配度最高的区域，我们只需取到匹配度最高区域的起始点即可。示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">int result_cols = mScreenShot.cols() - mBouncerTemplate.cols();</span><br><span class="line">int result_rows = mScreenShot.rows() - mBouncerTemplate.rows();</span><br><span class="line">Log.d(TAG, &quot;bg cols=&quot; + mScreenShot.cols() + &quot;, rows=&quot; + mScreenShot.rows());</span><br><span class="line">Log.d(TAG, &quot;template cols=&quot; + mBouncerTemplate.cols() + &quot;, rows=&quot; + mBouncerTemplate.rows());</span><br><span class="line"></span><br><span class="line">Mat matchResult = new Mat();</span><br><span class="line">matchResult.create(result_rows, result_cols, CV_IMAGE_TYPE);</span><br><span class="line"></span><br><span class="line">int matchMethod = Imgproc.TM_CCOEFF_NORMED;</span><br><span class="line"></span><br><span class="line">//Do the matching and normalize</span><br><span class="line">Imgproc.matchTemplate(mScreenShot, mBouncerTemplate, matchResult, matchMethod);</span><br><span class="line">Core.normalize(matchResult, matchResult, 0, 1, Core.NORM_MINMAX, -1);</span><br><span class="line"></span><br><span class="line">Point matchLoc;</span><br><span class="line">//Process match loc result.</span><br><span class="line">Core.MinMaxLocResult matchLocResult = Core.minMaxLoc(matchResult);</span><br><span class="line"></span><br><span class="line">if (matchMethod == Imgproc.TM_SQDIFF || matchMethod == Imgproc.TM_SQDIFF_NORMED) &#123;</span><br><span class="line">    matchLoc = matchLocResult.minLoc;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    matchLoc = matchLocResult.maxLoc;</span><br><span class="line">&#125;</span><br><span class="line">Log.d(TAG, &quot;matchLocation: x=&quot; + matchLoc.x + &quot;, y=&quot; + matchLoc.y);</span><br><span class="line"></span><br><span class="line">return matchLoc;</span><br></pre></td></tr></table></figure></p>
+<h4 id="步骤3：找到目标点"><a href="#步骤3：找到目标点" class="headerlink" title="步骤3：找到目标点"></a>步骤3：找到目标点</h4><p>找到目标点有两种方法：</p>
+<ol>
+<li>对称法</li>
+</ol>
+<p>据观察，每次画面静止时，小人处于的块和目标块中点的位置总是基于某个点对称的。<br>本以为这个对称中心是整个屏幕的中心，通过测量发现有一定的偏移，但确实是固定的一个点。<br>那这个偏移量是可以通过打点来调整的，就是慢慢将对称中心调整在下一个块的中心点上。<br>下面是我的调整的基于1280x720分辨率的偏移量，以及对称中心的获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private static final double SYMMETRY_POINT_Y_OFFSET_L2R = 14.5d;</span><br><span class="line">private static final double SYMMETRY_POINT_X_OFFSET_L2R = 14.5d;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">double symmetryPointX = mScreenShot.cols() / 2d;</span><br><span class="line">double symmetryPointY = mScreenShot.rows() / 2d;</span><br><span class="line"></span><br><span class="line">if (symmetryPointX &gt; bouncerX) &#123;</span><br><span class="line">    symmetryPointX += SYMMETRY_POINT_X_OFFSET_L2R;</span><br><span class="line">    symmetryPointY += SYMMETRY_POINT_Y_OFFSET_L2R;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    symmetryPointX += SYMMETRY_POINT_X_OFFSET_R2L;</span><br><span class="line">    symmetryPointY += SYMMETRY_POINT_Y_OFFSET_R2L;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么找目标点就轻而易举了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">double dstBouncerX;</span><br><span class="line">double dstBouncerY = fixedStarting.y - (fixedStarting.y - symmetryPointY) * 2;</span><br><span class="line">//calculate nextCenter</span><br><span class="line">if (symmetryPointX &gt; fixedStarting.x) &#123;</span><br><span class="line">    dstBouncerX = fixedStarting.x + (symmetryPointX - fixedStarting.x) * 2;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    dstBouncerX = fixedStarting.x + (symmetryPointX - fixedStarting.x) * 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>检测法<br>因为整个跳一跳画面比较简单，所以cv的边缘检测效果特别好，那么就可以通过检测最上面的一块也就是目标块的位置，来检测目标点。<br>思路是通过Canny来检测所有的边缘点，这些点是相互没有关系的，再通过findContours函数，来处理这些相互独立的点，来构成一个个整体的边缘，这样就可以进行处理了。<br>实现如下，但是这一种方法我并没有很好的利用，因为会找到很多边缘的中点，还没想到什么算法去匹配最佳的位置。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mCannyEdges = new Mat();</span><br><span class="line">mScreenShot.copyTo(mCannyEdges);</span><br><span class="line">Imgproc.Canny(mScreenShot, mCannyEdges, 5, 10);</span><br><span class="line"></span><br><span class="line">ArrayList&lt;MatOfPoint&gt; contours = new ArrayList&lt;&gt;();</span><br><span class="line">Mat hierarchy = new Mat();</span><br><span class="line">Imgproc.findContours(mCannyEdges, contours, hierarchy, Imgproc.RETR_LIST,</span><br><span class="line">        Imgproc.CHAIN_APPROX_SIMPLE);</span><br><span class="line">Log.d(TAG, &quot;contours size=&quot; + contours.size());</span><br><span class="line">List&lt;Moments&gt; mu = new ArrayList&lt;&gt;(contours.size());</span><br><span class="line">for (int i = 0; i &lt; contours.size(); i++) &#123;</span><br><span class="line">    mu.add(i, Imgproc.moments(contours.get(i), true));</span><br><span class="line">    Moments p = mu.get(i);</span><br><span class="line">    int x = (int) (p.get_m10() / p.get_m00());</span><br><span class="line">    int y = (int) (p.get_m01() / p.get_m00());</span><br><span class="line">    Imgproc.drawContours(mCannyEdges, contours, i, SCALAR_OF_MARK, THICKNESS_OF_MARK);</span><br><span class="line">    Imgproc.circle(mCannyEdges, new Point(x, y), 4, new Scalar(255,0,0,0), THICKNESS_OF_MARK);</span><br><span class="line">&#125;</span><br><span class="line">return new Point(0, 0);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>个人认为可以综合这两个的结果，取最佳点，算法还需要优化。</p>
+<p>理论上来说，这一步结束后，就可以计算两点距离，然后下发长按事件了。<br>但是，实践的结果看来，可能会有误差，而且微信有一个反外挂措施，就是即使跳中中心，图像也会做偏移一两个像素。<br>那么，如果全部按照图像识别的结果去计算，就会造成误差的积累，最后越跳越歪，这种误差积累在对称法中尤其明显，因为下一个点总是以上一个点是否准确为前提。</p>
+<p>那就需要做一个位置的修正。如何做呢？<br>那么可以观察到，每次跳跃还有一个参数是固定的，就是角度。<br>如果上次跳跃远了或者近了，坐标总是会在那一个角度的直线上浮动，然后下一次如果换方向，就可以通过与目标点的夹角来做修正。<br>首先多次测量得到正确的夹角tangent值为0.59，那我们每次取过对称点tangent为0.59的直线，和过小人坐标点斜率相反的直线，取交点，就是我们修正后的小人坐标点。</p>
+<p>算法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">private static final double GOOD_TANGENT = 0.59d;</span><br><span class="line">private Point fixStartingPoint(double bouncerX, double bouncerY, double symmetryPointX, double symmetryPointY) &#123;</span><br><span class="line">    //eliminating the error</span><br><span class="line">    double deltaX = Math.abs(symmetryPointX - bouncerX);</span><br><span class="line">    double deltaY = Math.abs(symmetryPointY - bouncerY);</span><br><span class="line">    double tangent = deltaY / deltaX;</span><br><span class="line">    if (DBG) &#123;</span><br><span class="line">        Log.d(TAG, &quot;deltaX = &quot; + deltaX + &quot;, deltaY=&quot; + deltaY);</span><br><span class="line">        Log.d(TAG, &quot;tangent=&quot; + tangent + &quot;, radius=&quot; + Math.atan(tangent));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //x = ky + b</span><br><span class="line">    double slopeDst;</span><br><span class="line">    double slopeSrc;</span><br><span class="line">    double interceptDst;</span><br><span class="line">    double interceptSrc;</span><br><span class="line">    if (symmetryPointX &gt; bouncerX) &#123;</span><br><span class="line">        slopeSrc = 1 / GOOD_TANGENT;</span><br><span class="line">        slopeDst = -slopeSrc;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        slopeDst = 1 / GOOD_TANGENT;</span><br><span class="line">        slopeSrc = -slopeDst;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    interceptSrc = bouncerX - slopeSrc * bouncerY;</span><br><span class="line">    interceptDst = symmetryPointX - slopeDst * symmetryPointY;</span><br><span class="line"></span><br><span class="line">    double goodY = (interceptDst - interceptSrc) / (slopeSrc - slopeDst);</span><br><span class="line">    double goodX = goodY * slopeSrc + interceptSrc;</span><br><span class="line"></span><br><span class="line">    return new Point(goodX, goodY);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="步骤4：计算距离"><a href="#步骤4：计算距离" class="headerlink" title="步骤4：计算距离"></a>步骤4：计算距离</h4><p>这一步就很简单了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">double distance = Math.sqrt(Math.pow(Math.abs(dstBouncerX - fixedStarting.x), 2) + Math.pow((fixedStarting.y - dstBouncerY), 2));</span><br></pre></td></tr></table></figure></p>
+<h4 id="步骤5：下发长按"><a href="#步骤5：下发长按" class="headerlink" title="步骤5：下发长按"></a>步骤5：下发长按</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    int duration = (int) (distance * HOP_RATIO * 1080 / mScreenShot.cols());</span><br><span class="line"></span><br><span class="line">    int randomX = new Random().nextInt(100) + 150;</span><br><span class="line">    int randomY = new Random().nextInt(100) + 200;</span><br><span class="line"></span><br><span class="line">    Process p = Config.RunAsRoot(new String[]&#123;&quot;input touchscreen swipe &quot; +</span><br><span class="line">            randomX + &quot; &quot; + randomY + &quot; &quot; +</span><br><span class="line">            randomX + &quot; &quot; + randomY + &quot; &quot; +</span><br><span class="line">            duration&#125;);</span><br><span class="line">    Log.d(TAG, &quot;pressint duration=&quot; + duration);</span><br><span class="line">    p.waitFor();</span><br><span class="line">&#125; catch (IOException | InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意每次按下的坐标和间隔时间要做随机，否则会被检测出外挂。<br>结束。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/29/wechathoptrainer - 副本/" rel="next" title="wechathoptrainer">
+                <i class="fa fa-chevron-left"></i> wechathoptrainer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Zack M" />
+            
+              <p class="site-author-name" itemprop="name">Zack M</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/AvaZack" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#先贴代码：https-github-com-AvaZack-wechathoptrainer"><span class="nav-text"><a href="#&#x5148;&#x8D34;&#x4EE3;&#x7801;&#xFF1A;https-github-com-AvaZack-wechathoptrainer" class="headerlink" title="&#x5148;&#x8D34;&#x4EE3;&#x7801;&#xFF1A;https://github.com/AvaZack/wechathoptrainer"></a>&#x5148;&#x8D34;&#x4EE3;&#x7801;&#xFF1A;<a href="https://github.com/AvaZack/wechathoptrainer" target="_blank" rel="noopener">https://github.com/AvaZack/wechathoptrainer</a></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简述一下思路："><span class="nav-text"><a href="#&#x7B80;&#x8FF0;&#x4E00;&#x4E0B;&#x601D;&#x8DEF;&#xFF1A;" class="headerlink" title="&#x7B80;&#x8FF0;&#x4E00;&#x4E0B;&#x601D;&#x8DEF;&#xFF1A;"></a>&#x7B80;&#x8FF0;&#x4E00;&#x4E0B;&#x601D;&#x8DEF;&#xFF1A;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤1：获取设备截图"><span class="nav-text"><a href="#&#x6B65;&#x9AA4;1&#xFF1A;&#x83B7;&#x53D6;&#x8BBE;&#x5907;&#x622A;&#x56FE;" class="headerlink" title="&#x6B65;&#x9AA4;1&#xFF1A;&#x83B7;&#x53D6;&#x8BBE;&#x5907;&#x622A;&#x56FE;"></a>&#x6B65;&#x9AA4;1&#xFF1A;&#x83B7;&#x53D6;&#x8BBE;&#x5907;&#x622A;&#x56FE;</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#方法1：命令行"><span class="nav-text"><a href="#&#x65B9;&#x6CD5;1&#xFF1A;&#x547D;&#x4EE4;&#x884C;" class="headerlink" title="&#x65B9;&#x6CD5;1&#xFF1A;&#x547D;&#x4EE4;&#x884C;"></a>&#x65B9;&#x6CD5;1&#xFF1A;&#x547D;&#x4EE4;&#x884C;</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法二：java实现"><span class="nav-text"><a href="#&#x65B9;&#x6CD5;&#x4E8C;&#xFF1A;java&#x5B9E;&#x73B0;" class="headerlink" title="&#x65B9;&#x6CD5;&#x4E8C;&#xFF1A;java&#x5B9E;&#x73B0;"></a>&#x65B9;&#x6CD5;&#x4E8C;&#xFF1A;java&#x5B9E;&#x73B0;</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤2：用cv找到小人位置"><span class="nav-text"><a href="#&#x6B65;&#x9AA4;2&#xFF1A;&#x7528;cv&#x627E;&#x5230;&#x5C0F;&#x4EBA;&#x4F4D;&#x7F6E;" class="headerlink" title="&#x6B65;&#x9AA4;2&#xFF1A;&#x7528;cv&#x627E;&#x5230;&#x5C0F;&#x4EBA;&#x4F4D;&#x7F6E;"></a>&#x6B65;&#x9AA4;2&#xFF1A;&#x7528;cv&#x627E;&#x5230;&#x5C0F;&#x4EBA;&#x4F4D;&#x7F6E;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤3：找到目标点"><span class="nav-text"><a href="#&#x6B65;&#x9AA4;3&#xFF1A;&#x627E;&#x5230;&#x76EE;&#x6807;&#x70B9;" class="headerlink" title="&#x6B65;&#x9AA4;3&#xFF1A;&#x627E;&#x5230;&#x76EE;&#x6807;&#x70B9;"></a>&#x6B65;&#x9AA4;3&#xFF1A;&#x627E;&#x5230;&#x76EE;&#x6807;&#x70B9;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤4：计算距离"><span class="nav-text"><a href="#&#x6B65;&#x9AA4;4&#xFF1A;&#x8BA1;&#x7B97;&#x8DDD;&#x79BB;" class="headerlink" title="&#x6B65;&#x9AA4;4&#xFF1A;&#x8BA1;&#x7B97;&#x8DDD;&#x79BB;"></a>&#x6B65;&#x9AA4;4&#xFF1A;&#x8BA1;&#x7B97;&#x8DDD;&#x79BB;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤5：下发长按"><span class="nav-text"><a href="#&#x6B65;&#x9AA4;5&#xFF1A;&#x4E0B;&#x53D1;&#x957F;&#x6309;" class="headerlink" title="&#x6B65;&#x9AA4;5&#xFF1A;&#x4E0B;&#x53D1;&#x957F;&#x6309;"></a>&#x6B65;&#x9AA4;5&#xFF1A;&#x4E0B;&#x53D1;&#x957F;&#x6309;</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zack M</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+  <i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  visitors:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  </div>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
