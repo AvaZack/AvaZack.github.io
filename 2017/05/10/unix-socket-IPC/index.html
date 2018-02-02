@@ -85,7 +85,7 @@
 <meta property="og:site_name" content="Zack&#39;s Blog">
 <meta property="og:description" content="2017-5-10 需求：arm与stm32在android平台中通信，串口由stm操作，由arm发送指令给stm，并接受stm的数据。 ##为什么要使用UnixDomainSocket:Unix Socket是一种Socket方式实现进程间通信（IPC）的功能，与普通的网络socket相比，不需要进行复杂的数据打包拆包，校验和计算验证，不需要走网络协议栈，而且安全可靠（官方说明）。 方法：soc">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2017-12-20T05:52:04.790Z">
+<meta property="og:updated_time" content="2018-02-02T12:04:09.992Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="unix socket实现进程通信">
 <meta name="twitter:description" content="2017-5-10 需求：arm与stm32在android平台中通信，串口由stm操作，由arm发送指令给stm，并接受stm的数据。 ##为什么要使用UnixDomainSocket:Unix Socket是一种Socket方式实现进程间通信（IPC）的功能，与普通的网络socket相比，不需要进行复杂的数据打包拆包，校验和计算验证，不需要走网络协议栈，而且安全可靠（官方说明）。 方法：soc">
@@ -372,7 +372,7 @@
         <p>2017-5-10</p>
 <h2 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h2><p>arm与stm32在android平台中通信，串口由stm操作，由arm发送指令给stm，并接受stm的数据。</p>
 <p>##为什么要使用UnixDomainSocket:<br>Unix Socket是一种Socket方式实现进程间通信（IPC）的功能，与普通的网络socket相比，不需要进行复杂的数据打包拆包，校验和计算验证，不需要走网络协议栈，而且安全可靠（官方说明）。</p>
-<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><p>socket的其中一种AF_UNIX或AF_LOCAL的类型，成为unix domain socket，是为了进行本地通信，也就是为了实现IPC，所以构造函数不需要IP和端口，取而代之的是文件路径。</p>
+<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><p>socket的其中一种AF_UNIX或AF_LOCAL的类型，成为unix domain socket，是为了进行本地通信，也就是为了实现IPC，所以构造函数不需要IP和端口，取而代之的是文件路径。<br><a id="more"></a></p>
 <h2 id="c端"><a href="#c端" class="headerlink" title="c端"></a>c端</h2><p><a href="http://man7.org/linux/man-pages/man7/unix.7.html" target="_blank" rel="noopener">http://man7.org/linux/man-pages/man7/unix.7.html</a></p>
 <p>####socket的构造函数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int socket(int domain, int type, int protocol);</span><br></pre></td></tr></table></figure></p>
 <p>而unix socket的构造<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;sys/un.h&gt;</span><br><span class="line"></span><br><span class="line">unix_socket = socket(AF_UNIX, type, 0);</span><br><span class="line">error = socketpair(AF_UNIX, type, 0, int *sv);</span><br></pre></td></tr></table></figure></p>
