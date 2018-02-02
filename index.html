@@ -257,148 +257,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://avazack.github.io/2018/02/02/introduction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Zack M">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zack's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/02/introduction/" itemprop="url">简介</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T20:27:21+08:00">
-                2018-02-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Words count in article&#58;</span>
-                
-                <span title="Words count in article">
-                  
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本书旨在帮助读者最大化效率地使用Java这门编程语言和它的基础库，比如java.lang，java.util，以及小部分涉及到java.util.concurrent和java.io。此书也不时会讨论到其他库，但不会涉及到图形用户界面编程，企业API，或是移动设备  本书囊括了78个条目，每一个条目都阐述了一条规则。一些使程序员中的翘楚们都受益的实践，也包括在在这些规则中。这些条目被大致分布在十个章节，每一章都就软件设计的一个宽泛的方向进行讨论。本书的意义不在于从头读到尾：每一个条目都几乎独立于其他条目。这些条目很大程度上互相参照，所以读者可以轻易制定阅读此书的规划。<br>在Java 5（发布版 1.5）版本，平台中加入了很多新特性，本书的大多数条目在某些方面也使用到了这些新特性。下面这张图表为读者展示出如何简要覆盖到这些特性：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2589724-c80974c1624f997d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>大多数条目都含有程序示例加以说明。本书的一个关键特性就在于：使用代码示例来说明很多设计模式和编码风格。适当情况下，这些示例会以权威参考书——《设计模式》（Gamma95）作为参考。<br>很大一部分条目含有一到多个程序实例，用来说明某些实践需要被避免。一些被认为是“反设计模式”的例子，会被注以显眼的标记，比如：“//千万不要这么做！”。而上述的每一个条目，都会解释为什么这个示例是错误的，然后荐以对应的正确方式。<br>本书不适合初学者：它针对已经对Java编程轻车熟路的读者。如果你还没有，则考虑读一些入门级书籍，比如《Java Programming Language》(Arnold05) 《Java Precisely》(Sestoft05)。然而凡是工作知识中涉及到Java语言的人群，本书都应适宜，同时还应该向进阶程序员提供新思路。<br>本书大多数条目均从一些基础原理派生而成。清晰与简单是至关重要的。一个模块的用户永远不应对模块的行为感到吃惊。模块应该尽可能的精简，但不是缩减。本书中的“模块”这个概念，指的是一个包含多个包的复杂系统中，一个独立方法中的，任意一个可复用的软件组件。代码应该用来复用而不应该用来拷贝。两个模块之间的依赖关系应该被最小化。严重错误要在生成后尽可能早的被检查出来，在编译时发现是最理想的。<br>虽然本书中的规则没有覆盖到所有的方面，但他们还是描绘出了绝大多数编程实践的情况。你不应该盲目的遵从这些教条，在适当的情况和特定原因下，也可以违反他们。学习编程的艺术，和学习大多数学科一样，都是从初学到学着如何打破这些规则。<br>就绝大部分而言，本书不讨论性能，而是关于如何编写清晰的，正确的，可用的，健壮的，灵活的，可维护的代码的。如果你能写出这样的代码，那么要得到你想要的性能，就相对容易很多了。不过本书的一些条目的确对性能进行了讨论，而且一些条目还给出了性能基准数。而这些基准数最多是个估计值，正如他们的注释：“在我的机器上”。<br>就我个人而言， 我的机器是一台老组装机，2.2GHz双核的AMD皓龙170，2G内存，winXP SP2系统上装了JDK1.6release版。这个JDK有两个虚拟机，分别是Java HotSpot的客户端和服务端虚拟机。性能基准数就是在服务端虚拟机上测量的。<br>当谈及Java编程语言及其类库的特性时，有时就很有必要提到特定的发行版。为了方便，本书使用“工程版本号”来代替官方发布名。下表是发布名和工程版本号的对应关系。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2589724-c34ef3922bf0d32b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>本书的示例是相当完整的，但是他们更偏向于可读性而不是完整性。这些示例经常地调用java.uti和java.io包中的类，所以为了编译这些示例，你需要导入一道多个包，比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import java.util.*;</span><br><span class="line">import java.util.concurrent.*;</span><br><span class="line">import java.io.*;</span><br></pre></td></tr></table></figure></p>
-<p>其他的都相似，所以不再赘述。本书的网站：<a href="http://java.sun.com/docs/books/effective" target="_blank" rel="noopener">http://java.sun.com/docs/books/effective</a> 包含了示例的扩展版，读者可以编译运行。<br>本书大部分内容使用的技术术语都定义在The Java Language Specification, Third Edition[JLS]中。一些术语需要被特别提及。Java语言支持四种类型：接口（包括注解），类（包括枚举），数组和原生类型。前三者被认为是引用类型。类的示例和数组是对象，而原生类型不是。一个类的成员包括它的成员变量、方法、成员类和成员接口。一个方法的声明包括它的名称和形式参数，不包括方法的返回类型。<br>本书还使用了一些不同于The Java Language Specification的术语。不同于The Java Language Specification的是，本书使用“继承”来代替“子类”。本书直接使用implements和extends关键字来表示一个类实现一个接口或一个接口继承另一个接口，来代替“继承”这个术语。为描述未指定的访问权限时，本书使用具体的概念“包内私有”来代替技术正确的术语“默认权限”。<br>本书使用到了一些在The Java Language Specification中未定义的技术术语。术语“导出的”API，也叫简单API，指的是程序员通过访问一个类、接口或包时使用的类，接口，构造函数，成员和序列化形式。（术语“API”，是“应用程序接口”的缩写，优先于“接口”这个概念使用，以避免与使用“接口”这个词的语言结构混淆。使用API来写代码的程序员，指的是API的“使用者”。一个实现中使用到API的类，是API的“客户”。<br>类、接口、构造函数、成员、和序列号形式，统称为API的“元素”。一个被导出的API包含了在定义API的包外可访问的API元素。每一个API客户都可以使用API元素，每一个API作者都可以提交并支持元素调用。同时，这些元素也是Javadoc方默认生成文档的操作形式中的元素。不严格地说，一个包中导出的API包含了public和protected成员和包中每个公共类或接口的构造函数。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://avazack.github.io/2018/01/29/wechat-hop-trainer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -815,6 +673,149 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/11/30/framework-channel-5g/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://avazack.github.io/2017/10/22/introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zack M">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zack's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/22/introduction/" itemprop="url">简介</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-22T23:47:21+08:00">
+                2017-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本书旨在帮助读者最大化效率地使用Java这门编程语言和它的基础库，比如java.lang，java.util，以及小部分涉及到java.util.concurrent和java.io。此书也不时会讨论到其他库，但不会涉及到图形用户界面编程，企业API，或是移动设备  本书囊括了78个条目，每一个条目都阐述了一条规则。一些使程序员中的翘楚们都受益的实践，也包括在在这些规则中。这些条目被大致分布在十个章节，每一章都就软件设计的一个宽泛的方向进行讨论。本书的意义不在于从头读到尾：每一个条目都几乎独立于其他条目。这些条目很大程度上互相参照，所以读者可以轻易制定阅读此书的规划。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/22/introduction/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>

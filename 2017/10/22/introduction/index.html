@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+  <link rel="manifest" href="/images/manifest.json">
+
+
+
+
+  <meta name="keywords" content="Effective Java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本书旨在帮助读者最大化效率地使用Java这门编程语言和它的基础库，比如java.lang，java.util，以及小部分涉及到java.util.concurrent和java.io。此书也不时会讨论到其他库，但不会涉及到图形用户界面编程，企业API，或是移动设备  本书囊括了78个条目，每一个条目都阐述了一条规则。一些使程序员中的翘楚们都受益的实践，也包括在在这些规则中。这些条目被大致分布在十个">
+<meta name="keywords" content="Effective Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简介">
+<meta property="og:url" content="https://avazack.github.io/2017/10/22/introduction/index.html">
+<meta property="og:site_name" content="Zack&#39;s Blog">
+<meta property="og:description" content="本书旨在帮助读者最大化效率地使用Java这门编程语言和它的基础库，比如java.lang，java.util，以及小部分涉及到java.util.concurrent和java.io。此书也不时会讨论到其他库，但不会涉及到图形用户界面编程，企业API，或是移动设备  本书囊括了78个条目，每一个条目都阐述了一条规则。一些使程序员中的翘楚们都受益的实践，也包括在在这些规则中。这些条目被大致分布在十个">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2589724-c80974c1624f997d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2589724-c34ef3922bf0d32b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-02-02T12:38:45.218Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简介">
+<meta name="twitter:description" content="本书旨在帮助读者最大化效率地使用Java这门编程语言和它的基础库，比如java.lang，java.util，以及小部分涉及到java.util.concurrent和java.io。此书也不时会讨论到其他库，但不会涉及到图形用户界面编程，企业API，或是移动设备  本书囊括了78个条目，每一个条目都阐述了一条规则。一些使程序员中的翘楚们都受益的实践，也包括在在这些规则中。这些条目被大致分布在十个">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2589724-c80974c1624f997d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"always","offset":5,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://avazack.github.io/2017/10/22/introduction/"/>
+
+
+
+
+
+  <title>简介 | Zack's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zack's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://avazack.github.io/2017/10/22/introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zack M">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zack's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">简介</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-22T23:47:21+08:00">
+                2017-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本书旨在帮助读者最大化效率地使用Java这门编程语言和它的基础库，比如java.lang，java.util，以及小部分涉及到java.util.concurrent和java.io。此书也不时会讨论到其他库，但不会涉及到图形用户界面编程，企业API，或是移动设备  本书囊括了78个条目，每一个条目都阐述了一条规则。一些使程序员中的翘楚们都受益的实践，也包括在在这些规则中。这些条目被大致分布在十个章节，每一章都就软件设计的一个宽泛的方向进行讨论。本书的意义不在于从头读到尾：每一个条目都几乎独立于其他条目。这些条目很大程度上互相参照，所以读者可以轻易制定阅读此书的规划。<br><a id="more"></a><br>在Java 5（发布版 1.5）版本，平台中加入了很多新特性，本书的大多数条目在某些方面也使用到了这些新特性。下面这张图表为读者展示出如何简要覆盖到这些特性：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2589724-c80974c1624f997d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>大多数条目都含有程序示例加以说明。本书的一个关键特性就在于：使用代码示例来说明很多设计模式和编码风格。适当情况下，这些示例会以权威参考书——《设计模式》（Gamma95）作为参考。<br>很大一部分条目含有一到多个程序实例，用来说明某些实践需要被避免。一些被认为是“反设计模式”的例子，会被注以显眼的标记，比如：“//千万不要这么做！”。而上述的每一个条目，都会解释为什么这个示例是错误的，然后荐以对应的正确方式。<br>本书不适合初学者：它针对已经对Java编程轻车熟路的读者。如果你还没有，则考虑读一些入门级书籍，比如《Java Programming Language》(Arnold05) 《Java Precisely》(Sestoft05)。然而凡是工作知识中涉及到Java语言的人群，本书都应适宜，同时还应该向进阶程序员提供新思路。<br>本书大多数条目均从一些基础原理派生而成。清晰与简单是至关重要的。一个模块的用户永远不应对模块的行为感到吃惊。模块应该尽可能的精简，但不是缩减。本书中的“模块”这个概念，指的是一个包含多个包的复杂系统中，一个独立方法中的，任意一个可复用的软件组件。代码应该用来复用而不应该用来拷贝。两个模块之间的依赖关系应该被最小化。严重错误要在生成后尽可能早的被检查出来，在编译时发现是最理想的。<br>虽然本书中的规则没有覆盖到所有的方面，但他们还是描绘出了绝大多数编程实践的情况。你不应该盲目的遵从这些教条，在适当的情况和特定原因下，也可以违反他们。学习编程的艺术，和学习大多数学科一样，都是从初学到学着如何打破这些规则。<br>就绝大部分而言，本书不讨论性能，而是关于如何编写清晰的，正确的，可用的，健壮的，灵活的，可维护的代码的。如果你能写出这样的代码，那么要得到你想要的性能，就相对容易很多了。不过本书的一些条目的确对性能进行了讨论，而且一些条目还给出了性能基准数。而这些基准数最多是个估计值，正如他们的注释：“在我的机器上”。<br>就我个人而言， 我的机器是一台老组装机，2.2GHz双核的AMD皓龙170，2G内存，winXP SP2系统上装了JDK1.6release版。这个JDK有两个虚拟机，分别是Java HotSpot的客户端和服务端虚拟机。性能基准数就是在服务端虚拟机上测量的。<br>当谈及Java编程语言及其类库的特性时，有时就很有必要提到特定的发行版。为了方便，本书使用“工程版本号”来代替官方发布名。下表是发布名和工程版本号的对应关系。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2589724-c34ef3922bf0d32b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>本书的示例是相当完整的，但是他们更偏向于可读性而不是完整性。这些示例经常地调用java.uti和java.io包中的类，所以为了编译这些示例，你需要导入一道多个包，比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import java.util.*;</span><br><span class="line">import java.util.concurrent.*;</span><br><span class="line">import java.io.*;</span><br></pre></td></tr></table></figure></p>
+<p>其他的都相似，所以不再赘述。本书的网站：<a href="http://java.sun.com/docs/books/effective" target="_blank" rel="noopener">http://java.sun.com/docs/books/effective</a> 包含了示例的扩展版，读者可以编译运行。<br>本书大部分内容使用的技术术语都定义在The Java Language Specification, Third Edition[JLS]中。一些术语需要被特别提及。Java语言支持四种类型：接口（包括注解），类（包括枚举），数组和原生类型。前三者被认为是引用类型。类的示例和数组是对象，而原生类型不是。一个类的成员包括它的成员变量、方法、成员类和成员接口。一个方法的声明包括它的名称和形式参数，不包括方法的返回类型。<br>本书还使用了一些不同于The Java Language Specification的术语。不同于The Java Language Specification的是，本书使用“继承”来代替“子类”。本书直接使用implements和extends关键字来表示一个类实现一个接口或一个接口继承另一个接口，来代替“继承”这个术语。为描述未指定的访问权限时，本书使用具体的概念“包内私有”来代替技术正确的术语“默认权限”。<br>本书使用到了一些在The Java Language Specification中未定义的技术术语。术语“导出的”API，也叫简单API，指的是程序员通过访问一个类、接口或包时使用的类，接口，构造函数，成员和序列化形式。（术语“API”，是“应用程序接口”的缩写，优先于“接口”这个概念使用，以避免与使用“接口”这个词的语言结构混淆。使用API来写代码的程序员，指的是API的“使用者”。一个实现中使用到API的类，是API的“客户”。<br>类、接口、构造函数、成员、和序列号形式，统称为API的“元素”。一个被导出的API包含了在定义API的包外可访问的API元素。每一个API客户都可以使用API元素，每一个API作者都可以提交并支持元素调用。同时，这些元素也是Javadoc方默认生成文档的操作形式中的元素。不严格地说，一个包中导出的API包含了public和protected成员和包中每个公共类或接口的构造函数。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Effective-Java/" rel="tag"># Effective Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/10/unix-socket-IPC/" rel="next" title="unix socket实现进程通信">
+                <i class="fa fa-chevron-left"></i> unix socket实现进程通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/30/framework-channel-5g/" rel="prev" title="在指定channel上开启softAp">
+                在指定channel上开启softAp <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Zack M" />
+            
+              <p class="site-author-name" itemprop="name">Zack M</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/AvaZack" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zack M</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+  <i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  visitors:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  </div>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
